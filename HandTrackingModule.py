@@ -35,6 +35,7 @@ class handDetector():
     # Main function to detect and draw on hands
     def find_Hands(self,img, draw = True):
 
+        num_of_hands = 0
         #Pass our image
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(img_rgb) #this will process the frame and return results 
@@ -42,12 +43,13 @@ class handDetector():
         #Extract info 
         if self.results.multi_hand_landmarks:
             for hand in self.results.multi_hand_landmarks:
+                num_of_hands+=1
                 if self.draw:
                     self.draw_util.draw_landmarks(img , hand, self.mpHands.HAND_CONNECTIONS)    
         if self.show_fps:
-            return self.display_fps(img)
+            return self.display_fps(img) , num_of_hands
         
-        return img
+        return (img , num_of_hands)
 
     def find_poisiton(self, img, hand_Num = 0): 
         

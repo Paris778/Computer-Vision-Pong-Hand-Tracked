@@ -3,6 +3,12 @@
 import random
 import pygame, sys
 from pygame.locals import *
+############
+import cv2
+import mediapipe as mp
+import time #for frame rate
+import HandTrackingModule as htm
+import numpy
 
 pygame.init()
 fps = pygame.time.Clock()
@@ -60,14 +66,14 @@ def init():
 
 
 #draw function of canvas
-def draw(canvas):
+def draw(canvas,one_hand_detected,two_hands_detected):
     global paddle1_pos, paddle2_pos, ball_pos, ball_vel, l_score, r_score
            
     canvas.fill(BLACK)
     pygame.draw.line(canvas, WHITE, [WIDTH // 2, 0],[WIDTH // 2, HEIGHT], 1)
     pygame.draw.line(canvas, WHITE, [PAD_WIDTH, 0],[PAD_WIDTH, HEIGHT], 1)
     pygame.draw.line(canvas, WHITE, [WIDTH - PAD_WIDTH, 0],[WIDTH - PAD_WIDTH, HEIGHT], 1)
-    pygame.draw.circle(canvas, WHITE, [WIDTH//2, HEIGHT//2], 70, 1)
+    #pygame.draw.circle(canvas, WHITE, [WIDTH//2, HEIGHT//2], 70, 1)
 
     # update paddle's vertical position, keep paddle on the screen
     if paddle1_pos[1] > HALF_PAD_HEIGHT and paddle1_pos[1] < HEIGHT - HALF_PAD_HEIGHT:
@@ -125,6 +131,19 @@ def draw(canvas):
     label2 = myfont2.render("Score "+str(r_score), 1, (255,255,0))
     canvas.blit(label2, (470, 20))  
     
+    #SHow whether a hand is detected or not
+    if two_hands_detected:
+        text = "Two hands detected"
+        colour = (0,255,0)
+    elif one_hand_detected:
+        text = "One hand detected"
+        colour = (255,172,0)
+    else:
+        text = "No hands detected"
+        colour = (255,0,0)
+    
+    label_hands_detect = myfont2.render(text, 1, colour)
+    canvas.blit(label_hands_detect, (350, 350))  
     
 #keydown handler
 def keydown(event):
@@ -149,12 +168,51 @@ def keyup(event):
         paddle2_vel = 0
 
 init()
+#########################################################
+#Match the camera height and width to the game dimentions
+cam_width , cam_height = WIDTH, HEIGHT
+
+#initialise video capture object (webcam)
+cap = cv2.VideoCapture(0)
+cap.set(3, cam_width)
+cap.set(4, cam_height)
+detector = htm.handDetector(track_conf=0.75, detection_conf=0.75,draw = True, show_fps = True)
+
+#######################################################
 
 
 #game loop
 while True:
+    
+    #Define
+    landmark_List = []
+    landmark_List_1 = []
+    #
+    success, img = cap.read()
+    (img, num_of_hands) = detector.find_Hands(img)
+    landmark_List = detector.find_poisiton(img, hand_Num=0)
+    if num_of_hands > 1:
+        landmark_List_1 = detector.find_poisiton(img, hand_Num=1)
+    
+    #### Update Position 
+    one_hand_detected = len(landmark_List) != 0
+    second_hand_detected = len(landmark_List_1) != 0
+    #print("Length : ", len(landmark_List))
+    if one_hand_detected:
+        #Get coordiantes of index finger 
+        index_finger_x, index_finger_y = landmark_List[4][1] , landmark_List[4][2]
+        #Set Y position of paddle in respect to the correct proportions         
+        paddle1_pos =  [HALF_PAD_WIDTH - 1, index_finger_y]
+    if second_hand_detected:
+        index2_finger_x, index2_finger_y = landmark_List_1[4][1] , landmark_List_1[4][2]
+        #Set Y position of paddle in respect to the correct proportions         
+        paddle2_pos = [WIDTH +1 - HALF_PAD_WIDTH,index2_finger_y]
+        
+    #Show image
+    cv2.imshow("Image", img)
+    cv2.waitKey(1)
 
-    draw(window)
+    draw(window,one_hand_detected,(one_hand_detected and second_hand_detected))
 
     for event in pygame.event.get():
 
