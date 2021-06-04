@@ -8,12 +8,12 @@ This project was developed using Google's mediapipe library.
 
 ## Dependencies 
 
-####Google mediapipe 
+#### Google mediapipe 
 
 ```bash
 pip3 install mediapipe
 ```
-####Numpy 
+#### Numpy 
 
 ```bash
 pip3 install numpy
