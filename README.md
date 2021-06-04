@@ -4,7 +4,8 @@
 
 A computer vision project introducing into a timeless classic arcade game a hand tracking functionality for individuals with motor disorders affecting their finger agility.
 This project allows for up to two players to play pong by only raising their hands into the air. 
-This project was developed using Google's mediapipe library.
+This project was developed using Google's mediapipe library and pygame.
+The original impementation of pong is greately credited to @vinothpandian and adapted by myself.
 
 ## Dependencies 
 
@@ -13,10 +14,10 @@ This project was developed using Google's mediapipe library.
 ```bash
 pip3 install mediapipe
 ```
-#### Numpy 
+#### Pygame 
 
 ```bash
-pip3 install numpy
+pip3 install pygame
 ```
 
 ## Screen Shots
