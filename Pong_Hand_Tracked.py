@@ -8,7 +8,6 @@ import cv2
 import mediapipe as mp
 import time #for frame rate
 import HandTrackingModule as htm
-import numpy
 
 pygame.init()
 fps = pygame.time.Clock()
@@ -202,11 +201,12 @@ while True:
         #Get coordiantes of index finger 
         index_finger_x, index_finger_y = landmark_List[4][1] , landmark_List[4][2]
         #Set Y position of paddle in respect to the correct proportions         
-        paddle1_pos =  [HALF_PAD_WIDTH - 1, index_finger_y]
+        paddle2_pos = [WIDTH +1 - HALF_PAD_WIDTH,index_finger_y]
     if second_hand_detected:
         index2_finger_x, index2_finger_y = landmark_List_1[4][1] , landmark_List_1[4][2]
         #Set Y position of paddle in respect to the correct proportions         
-        paddle2_pos = [WIDTH +1 - HALF_PAD_WIDTH,index2_finger_y]
+        
+        paddle1_pos =  [HALF_PAD_WIDTH - 1, index2_finger_y]
         
     #Show image
     cv2.imshow("Image", img)
