@@ -20,4 +20,9 @@ pip3 install mediapipe
 pip3 install pygame
 ```
 
+## How to execute
+
+- Assuming all dependencies are properly installed
+- Open code into a text editor (VSCode etc.) and execute the Pong_Hand_Tracked.py file
+
 ## Screen Shots
