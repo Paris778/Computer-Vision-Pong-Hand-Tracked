@@ -26,3 +26,4 @@ pip3 install pygame
 - Open code into a text editor (VSCode etc.) and execute the Pong_Hand_Tracked.py file
 
 ## Screen Shots
+![Alt text](https://github.com/Paris778/Computer-Vision-Pong-Hand-Tracked/blob/main/pong_screenshots/Capture.JPG "Screenshot")
